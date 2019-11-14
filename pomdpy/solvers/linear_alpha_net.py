@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 import os
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from experiments.scripts.pickle_wrapper import save_pkl, load_pkl
 from .ops import simple_linear, select_action_tf, clipped_error
 from .alpha_vector import AlphaVector
@@ -41,7 +41,9 @@ class LinearAlphaNet(BaseTFSolver):
         return LinearAlphaNet(agent, sess)
 
     def train(self, epoch):
-        start_step = self.step_assign_op.eval({self.step_input: epoch * self.model.max_steps})
+        start_step = self.sess.run(
+            self.step_assign_op,
+            feed_dict={self.step_input: epoch * self.model.max_steps})
 
         total_reward, avg_reward_per_step, total_loss, total_v, total_delta = 0., 0., 0., 0., 0.
         actions = []
@@ -83,7 +85,8 @@ class LinearAlphaNet(BaseTFSolver):
             avg_v = total_v / (step + 1.)
             avg_delta = total_delta / (step + 1.)
 
-            self.step_assign_op.eval({self.step_input: step + 1})
+            self.sess.run(self.step_assign_op,
+                          feed_dict={self.step_input: step + 1})
 
             self.inject_summary({
                 'average.reward': avg_reward_per_step,
@@ -93,9 +96,11 @@ class LinearAlphaNet(BaseTFSolver):
                 'training.weights': self.sess.run(self.w['l1_w'], feed_dict={
                     self.ops['l0_in']: np.reshape(self.model.get_reward_matrix().flatten(), [1, 6]),
                     self.ops['belief']: belief}),
-                'training.learning_rate': self.ops['learning_rate_op'].eval(
+                'training.learning_rate': self.sess.run(
+                    self.ops['learning_rate_op'], feed_dict=
                     {self.ops['learning_rate_step']: step + 1}),
-                'training.epsilon': self.ops['epsilon_op'].eval(
+                'training.epsilon': self.sess.run(
+                    self.ops['epsilon_op'], feed_dict=
                     {self.ops['epsilon_step']: step + 1})
             }, step + 1)
 
@@ -234,7 +239,7 @@ class LinearAlphaNet(BaseTFSolver):
                 self.w_assign_op[name] = self.w[name].assign(self.w_input[name])
 
         for name in self.w.keys():
-            self.w_assign_op[name].eval({self.w_input[name]: load_pkl(os.path.join(self.model.weight_dir, "%s.pkl" % name))})
+            self.sess.run(w_assign_op[name], feed_dict={self.w_input[name]: load_pkl(os.path.join(self.model.weight_dir, "%s.pkl" % name))})
 
     def save_alpha_vectors(self):
         if not os.path.exists(self.model.weight_dir):

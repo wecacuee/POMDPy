@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import os
 import abc
 from future.utils import with_metaclass

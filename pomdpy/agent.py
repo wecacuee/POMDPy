@@ -66,7 +66,7 @@ class Agent:
                          '\t' + 'ave time/epoch: ' + str(self.experiment_results.time.mean))
 
     def multi_epoch_tf(self):
-        import tensorflow as tf
+        import tensorflow.compat.v1 as tf
         tf.set_random_seed(int(self.model.seed) + 1)
 
         with tf.Session() as sess:
