@@ -1,0 +1,6 @@
+{
+    "checkpoint_dir": "/home/vdhiman/aux/generative_inpainting/logs/radish",
+    "prediction_model_config_yaml": "/home/vdhiman/wrk/generative_inpainting/inpaint.yml",
+    "map_size": [4000, 4000],
+    "pose_size": [3]
+}

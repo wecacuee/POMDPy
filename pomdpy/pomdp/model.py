@@ -285,12 +285,13 @@ class StepResult(object):
      * For convenience, this also includes the action taken, and a boolean flag representing
      * whether or not the resulting next state is a terminal state.
     """
-    def __init__(self):
-        self.action = None
-        self.observation = None
-        self.reward = 0
-        self.next_state = None
-        self.is_terminal = 0
+    def __init__(self, action=None, observation=None, reward=0,
+                 next_state=None, is_terminal=0):
+        self.action = action
+        self.observation = observation
+        self.reward = reward
+        self.next_state = next_state
+        self.is_terminal = is_terminal
 
     def print_step_result(self):
         print("------- Step Result --------")

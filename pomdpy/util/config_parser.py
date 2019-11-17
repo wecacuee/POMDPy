@@ -3,13 +3,14 @@ import os
 # important directories
 CFG_DIR = 'config'
 ROCK_CFG_FILE = 'rock_sample_config.json'
+SEEKING_CFG_FILE = 'seeking_config.json'
 LOG_DIR = 'log'
 LOG_FILE = 'POMDPy.log'
 
 my_dir = os.path.dirname(__file__)
 rock_cfg = os.path.join(my_dir, '..', CFG_DIR, ROCK_CFG_FILE)
 log_path = os.path.join(my_dir, '..', LOG_DIR, LOG_FILE)
-
+seeking_cfg = os.path.join(my_dir, '..', CFG_DIR, SEEKING_CFG_FILE)
 
 def parse_map(m):
     map_text = []
